@@ -44,16 +44,27 @@
             }
         };
         
-        // Mês e ano atualmente exibidos (começa em junho)
-        let mesAtual = 5; // 5 = junho (0-11)
-        let anoAtual = 2025;
+        // Obtém a data atual
+        const hoje = new Date();
+        let mesAtual = hoje.getMonth(); // 0-11 (janeiro-dezembro)
+        let anoAtual = hoje.getFullYear();
         
         // Variável para armazenar a turma selecionada
         let turmaSelecionada = '';
         
         // Carrega dados salvos ao iniciar e renderiza o calendário
         document.addEventListener('DOMContentLoaded', function() {
+            // Verifica se o mês atual está dentro do período coberto (junho a dezembro de 2025)
+            if (anoAtual < 2025 || (anoAtual === 2025 && mesAtual < 5)) {
+                mesAtual = 5; // Junho
+                anoAtual = 2025;
+            } else if (anoAtual > 2025 || (anoAtual === 2025 && mesAtual > 11)) {
+                mesAtual = 11; // Dezembro
+                anoAtual = 2025;
+            }
+            
             loadSavedData();
+            updateMonthYearDisplay();
             renderCalendar();
             updateNavigationButtons();
             
