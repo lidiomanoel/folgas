@@ -274,3 +274,7 @@
                 }
             }
         }
+
+        window.onload = function() {
+            verificarFolgas();
+        };
