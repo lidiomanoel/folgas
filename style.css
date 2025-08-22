@@ -1,167 +1,256 @@
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .notification {
-            padding: 12px;
-            margin: 15px 0;
-            border-radius: 5px;
-            display: none;
-            font-size: 14px;
-        }
-        .folga {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .trabalho {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .calendar {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .calendar th {
-            background-color: #f2f2f2;
-            padding: 8px;
-            text-align: center;
-            font-size: 12px;
-        }
-        .calendar td {
-            border: 1px solid #ddd;
-            padding: 5px;
-            height: 60px;
-            vertical-align: top;
-            font-size: 12px;
-        }
-        .today {
-            background-color: #e6f7ff;
-            font-weight: bold;
-        }
-        .work-day {
-            background-color: #ffebee;
-        }
-        .off-day {
-            background-color: #e8f5e9;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .day-number {
-            font-weight: bold;
-            margin-bottom: 2px;
-            font-size: 14px;
-        }
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-        }
-        .legend-color {
-            width: 15px;
-            height: 15px;
-            border: 1px solid #ddd;
-        }
-        #turma {
-            padding: 8px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        h1 {
-            font-size: 35px;
-            margin-bottom: 15px;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        }
-        h2 {
-            font-size: 18px;
-        }
-        .month-selector {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        .month-selector button {
-            padding: 8px 15px;
-            background-color: #f2f2f2;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .month-selector button:hover {
-            background-color: #e6e6e6;
-        }
-        .month-selector button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        footer {
-            margin-top: auto;
-            padding: 15px 0;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            border-top: 1px solid #eee;
-            font-style: 'Quicksand';
-        }
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
+}
 
-        /* Melhorias específicas para celulares */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .calendar td {
-                height: 50px;
-                padding: 3px;
-            }
-            .day-number {
-                font-size: 12px;
-            }
-            .calendar td span {
-                font-size: 10px;
-                display: block;
-                margin-top: 2px;
-            }
-            .notification {
-                padding: 10px;
-                font-size: 13px;
-            }
-            footer {
-                font-size: 11px;
-                padding: 10px 0;
-            }
-        }
+/* Estilos para o modo escuro */
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
 
-        /* Ajustes para telas muito pequenas */
-        @media (max-width: 400px) {
-            .calendar td {
-                height: 45px;
-            }
-            .day-number {
-                font-size: 11px;
-            }
-            .calendar td span {
-                font-size: 9px;
-            }
-            h1 {
-                font-size: 20px;
-            }
-        }
+body.dark-mode .calendar th {
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+}
+
+body.dark-mode .calendar td {
+    border-color: #444;
+}
+
+body.dark-mode .today {
+    background-color: #2a4365;
+}
+
+body.dark-mode .work-day {
+    background-color: #742a2a;
+}
+
+body.dark-mode .off-day {
+    background-color: #2d4a2d;
+}
+
+body.dark-mode .month-selector button {
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+    border-color: #444;
+}
+
+body.dark-mode .month-selector button:hover {
+    background-color: #3d3d3d;
+}
+
+body.dark-mode footer {
+    border-color: #444;
+    color: #aaa;
+}
+
+body.dark-mode #turma {
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+    border-color: #444;
+}
+
+/* Estilo do botão de modo escuro */
+.theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f2f2;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .theme-toggle {
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+}
+
+.notification {
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 5px;
+    display: none;
+    font-size: 14px;
+}
+.folga {
+    background-color: #d4edda;
+    color: #155724;
+}
+.trabalho {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+}
+.calendar th {
+    background-color: #f2f2f2;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.calendar td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    height: 60px;
+    vertical-align: top;
+    font-size: 12px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.today {
+    background-color: #e6f7ff;
+    font-weight: bold;
+}
+.work-day {
+    background-color: #ffebee;
+}
+.off-day {
+    background-color: #e8f5e9;
+}
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.day-number {
+    font-weight: bold;
+    margin-bottom: 2px;
+    font-size: 14px;
+}
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+#turma {
+    padding: 8px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+h1 {
+    font-size: 35px;
+    margin-bottom: 15px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+h2 {
+    font-size: 18px;
+}
+.month-selector {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.month-selector button {
+    padding: 8px 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.month-selector button:hover {
+    background-color: #e6e6e6;
+}
+.month-selector button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+footer {
+    margin-top: auto;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    border-top: 1px solid #eee;
+    font-style: 'Quicksand';
+    transition: border-color 0.3s, color 0.3s;
+}
+
+/* Melhorias específicas para celulares */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    .calendar td {
+        height: 50px;
+        padding: 3px;
+    }
+    .day-number {
+        font-size: 12px;
+    }
+    .calendar td span {
+        font-size: 10px;
+        display: block;
+        margin-top: 2px;
+    }
+    .notification {
+        padding: 10px;
+        font-size: 13px;
+    }
+    footer {
+        font-size: 11px;
+        padding: 10px 0;
+    }
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 400px) {
+    .calendar td {
+        height: 45px;
+    }
+    .day-number {
+        font-size: 11px;
+    }
+    .calendar td span {
+        font-size: 9px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+}
