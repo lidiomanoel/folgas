@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Quicksand', Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
     padding: 15px;
@@ -89,6 +89,7 @@ body.dark-mode .theme-toggle {
     border-radius: 5px;
     display: none;
     font-size: 14px;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .folga {
     background-color: #d4edda;
@@ -103,12 +104,14 @@ body.dark-mode .theme-toggle {
     border-collapse: collapse;
     margin-top: 15px;
     font-size: 14px;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .calendar th {
     background-color: #f2f2f2;
     padding: 8px;
     text-align: center;
     font-size: 12px;
+    font-weight: 600;
     transition: background-color 0.3s, color 0.3s;
 }
 .calendar td {
@@ -117,6 +120,7 @@ body.dark-mode .theme-toggle {
     height: 60px;
     vertical-align: top;
     font-size: 12px;
+    font-family: 'Quicksand', Arial, sans-serif;
     transition: background-color 0.3s, border-color 0.3s;
 }
 .today {
@@ -139,18 +143,21 @@ body.dark-mode .theme-toggle {
     font-weight: bold;
     margin-bottom: 2px;
     font-size: 14px;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .legend {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin: 15px 0;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .legend-item {
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: 12px;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .legend-color {
     width: 15px;
@@ -164,20 +171,25 @@ body.dark-mode .theme-toggle {
     margin-bottom: 15px;
     width: 100%;
     box-sizing: border-box;
+    font-family: 'Quicksand', Arial, sans-serif;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 h1 {
     font-size: 35px;
     margin-bottom: 15px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Quicksand', Arial, sans-serif;
+    font-weight: 700;
 }
 h2 {
     font-size: 18px;
+    font-family: 'Quicksand', Arial, sans-serif;
+    font-weight: 600;
 }
 .month-selector {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
+    font-family: 'Quicksand', Arial, sans-serif;
 }
 .month-selector button {
     padding: 8px 15px;
@@ -185,6 +197,8 @@ h2 {
     border: 1px solid #ddd;
     border-radius: 4px;
     cursor: pointer;
+    font-family: 'Quicksand', Arial, sans-serif;
+    font-weight: 500;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 .month-selector button:hover {
@@ -201,7 +215,8 @@ footer {
     font-size: 12px;
     color: #666;
     border-top: 1px solid #eee;
-    font-style: 'Quicksand';
+    font-family: 'Quicksand', Arial, sans-serif;
+    font-weight: 500;
     transition: border-color 0.3s, color 0.3s;
 }
 

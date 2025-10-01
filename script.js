@@ -125,12 +125,17 @@ function toggleDarkMode() {
     darkMode = !darkMode;
     document.body.classList.toggle('dark-mode', darkMode);
     
-    // Atualiza o ícone do botão
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.textContent = darkMode ? '☀️' : '🌙';
+    // Atualiza o ícone do botão baseado no estado atual
+    updateThemeToggleIcon();
     
     // Salva a preferência
     saveData();
+}
+
+// Função para atualizar o ícone do botão de tema
+function updateThemeToggleIcon() {
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.textContent = darkMode ? '☀️' : '🌙';
 }
 
 // Atualiza os botões de navegação (desabilita quando necessário)
@@ -168,8 +173,10 @@ function loadSavedData() {
         if (data.darkMode) {
             darkMode = data.darkMode;
             document.body.classList.add('dark-mode');
-            document.getElementById('themeToggle').textContent = '☀️';
         }
+        
+        // Atualiza o ícone do botão baseado no estado carregado
+        updateThemeToggleIcon();
         
         // Preenche o menu suspenso com os dados salvos
         if (turmaSelecionada) {
