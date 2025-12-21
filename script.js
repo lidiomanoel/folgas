@@ -8,8 +8,7 @@ const folgasPorTurmaEMes = {
     '2025-11': { 'A': [1, 8, 9, 13, 17, 24, 25], 'B': [2, 3, 10, 11, 18, 19, 26, 27], 'C': [4, 5, 12, 16, 20, 21, 28, 29], 'D': [6, 7, 14, 15, 22, 23, 30] },
     '2025-12': { 'A': [2, 3, 10, 14, 18, 19, 26, 27], 'B': [4, 5, 12, 13, 20, 21, 25, 29], 'C': [6, 7, 11, 15, 22, 23, 30, 31], 'D': [1, 8, 9, 16, 17, 24, 28] },
     
-    // Ano 2026 (Preencha os dias reais de folga abaixo)
-    '2026-1': { 'A': [3, 4, 8, 12, 19, 20,27, 28], 'B': [5, 6, 13, 14, 21, 25, 29, 30], 'C': [7, 11, 15, 16, 23, 24, 31], 'D': [1, 2, 9, 10, 17, 18, 22, 26] },
+    '2026-1': { 'A': [3, 4, 8, 12, 19, 20, 27, 28], 'B': [5, 6, 13, 14, 21, 25, 29, 30], 'C': [7, 11, 15, 16, 23, 24, 31], 'D': [1, 2, 9, 10, 17, 18, 22, 26] },
     '2026-2': { 'A': [4, 8, 12, 13, 20, 21, 28], 'B': [6, 7, 14, 15, 19, 23], 'C': [1, 5, 9, 16, 17, 24, 25], 'D': [2, 3, 10, 11, 18, 22, 26, 27] }, 
     '2026-3': { 'A': [1, 5, 9, 16, 17, 24, 25], 'B': [2, 3, 10, 11, 18, 26, 27], 'C': [4, 8, 12, 13, 20, 21, 28, 29], 'D': [6, 7, 14, 15, 23, 30, 31] },
     '2026-4': { 'A': [1, 2], 'B': [3, 4], 'C': [5, 6], 'D': [7, 8] },
@@ -24,21 +23,19 @@ const folgasPorTurmaEMes = {
 };
 
 const hoje = new Date();
-let mesAtual = hoje.getMonth();
+let mesAtual = hoje.getMonth(); 
 let anoAtual = hoje.getFullYear();
 let turmaSelecionada = '';
 let darkMode = false;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ajusta limites: Mínimo Junho/2025 - Máximo Dezembro/2026
-    const dataMinima = new Date(2025, 5); 
-    const dataMaxima = new Date(2026, 11);
-    const dataAtualComp = new Date(anoAtual, mesAtual);
-
-    if (dataAtualComp < dataMinima) {
-        mesAtual = 5; anoAtual = 2025;
-    } else if (dataAtualComp > dataMaxima) {
-        mesAtual = 11; anoAtual = 2026;
+    // Mantém os limites de navegação 2025-2026
+    if (anoAtual < 2025 || (anoAtual === 2025 && mesAtual < 5)) {
+        mesAtual = 5; 
+        anoAtual = 2025;
+    } else if (anoAtual > 2026) {
+        mesAtual = 11;
+        anoAtual = 2026;
     }
     
     loadSavedData();
@@ -49,32 +46,32 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('turma').addEventListener('change', function() {
         turmaSelecionada = this.value;
         saveData();
-        verificarFolgas();
+        verificarFolgas(); // Chama a função para atualizar a frase
         renderCalendar();
     });
     
     document.getElementById('prevMonth').addEventListener('click', function() {
         if (mesAtual === 5 && anoAtual === 2025) return;
-        if (mesAtual === 0) { mesAtual = 11; anoAtual--; } 
-        else { mesAtual--; }
+        if (mesAtual === 0) { mesAtual = 11; anoAtual--; } else { mesAtual--; }
         updateMonthYearDisplay();
         renderCalendar();
         updateNavigationButtons();
+        verificarFolgas();
     });
     
     document.getElementById('nextMonth').addEventListener('click', function() {
         if (mesAtual === 11 && anoAtual === 2026) return;
-        if (mesAtual === 11) { mesAtual = 0; anoAtual++; } 
-        else { mesAtual++; }
+        if (mesAtual === 11) { mesAtual = 0; anoAtual++; } else { mesAtual++; }
         updateMonthYearDisplay();
         renderCalendar();
         updateNavigationButtons();
+        verificarFolgas();
     });
     
     document.getElementById('themeToggle').addEventListener('click', function() {
         darkMode = !darkMode;
         document.body.classList.toggle('dark-mode', darkMode);
-        document.getElementById('themeToggle').textContent = darkMode ? '☀️' : '🌙';
+        this.textContent = darkMode ? '☀️' : '🌙';
         saveData();
     });
 });
@@ -87,6 +84,53 @@ function updateNavigationButtons() {
 function updateMonthYearDisplay() {
     const meses = ['JANEIRO', 'FEVEREIRO', 'MARÇO', 'ABRIL', 'MAIO', 'JUNHO', 'JULHO', 'AGOSTO', 'SETEMBRO', 'OUTUBRO', 'NOVEMBRO', 'DEZEMBRO'];
     document.getElementById('monthYear').textContent = `${meses[mesAtual]} ${anoAtual}`;
+}
+
+// RESTAURAÇÃO DA SUA FUNÇÃO ORIGINAL DE VERIFICAÇÃO
+function verificarFolgas() {
+    if (!turmaSelecionada) {
+        document.getElementById('notification').style.display = 'none';
+        return;
+    }
+    
+    const hojeData = new Date();
+    const diaAtual = hojeData.getDate();
+    const mesAtualHoje = hojeData.getMonth();
+    const anoAtualHoje = hojeData.getFullYear();
+    
+    // Verifica se estamos no mês/ano atualmente exibido
+    if (mesAtualHoje !== mesAtual || anoAtualHoje !== anoAtual) {
+        document.getElementById('notification').style.display = 'block';
+        document.getElementById('notification').className = 'notification trabalho';
+        document.getElementById('notification').innerHTML = 
+            `<strong>Fora do período exibido (${mesAtual + 1}/${anoAtual})</strong><br>` +
+            'Este aviso só mostra informações para o mês atualmente exibido.';
+        return;
+    }
+    
+    const chaveMes = `${anoAtual}-${mesAtual + 1}`;
+    const folgasDoMes = folgasPorTurmaEMes[chaveMes] || {};
+    const folgas = folgasDoMes[turmaSelecionada] || [];
+    const ehFolga = folgas.includes(diaAtual);
+    
+    const notification = document.getElementById('notification');
+    notification.style.display = 'block';
+    
+    if (ehFolga) {
+        notification.className = 'notification folga';
+        notification.innerHTML = `<strong>Hoje (${diaAtual}/${mesAtual + 1}/${anoAtual}) é seu dia de folga!</strong> Aproveite para descansar.`;
+    } else {
+        notification.className = 'notification trabalho';
+        notification.innerHTML = `<strong>Hoje (${diaAtual}/${mesAtual + 1}/${anoAtual}) é dia de trabalho.</strong>`;
+        
+        // Mostra quando será a próxima folga
+        const proximasFolgas = folgas.filter(dia => dia > diaAtual).sort((a, b) => a - b);
+        if (proximasFolgas.length > 0) {
+            notification.innerHTML += `<br>Sua próxima folga será dia ${proximasFolgas[0]}/${mesAtual + 1}/${anoAtual}.`;
+        } else {
+            notification.innerHTML += '<br>Este mês não há mais folgas para sua turma.';
+        }
+    }
 }
 
 function renderCalendar() {
@@ -113,9 +157,9 @@ function renderCalendar() {
                     const folgas = (folgasPorTurmaEMes[chave] && folgasPorTurmaEMes[chave][turmaSelecionada]) || [];
                     const isFolga = folgas.includes(date);
                     cell.classList.add(isFolga ? 'off-day' : 'work-day');
-                    const status = document.createElement('span');
-                    status.textContent = isFolga ? 'Folga' : 'Trabalho';
-                    cell.appendChild(status);
+                    const span = document.createElement('span');
+                    span.textContent = isFolga ? 'Folga' : 'Trabalho';
+                    cell.appendChild(span);
                 }
                 
                 if (date === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear()) {
@@ -130,37 +174,22 @@ function renderCalendar() {
     }
 }
 
-function verificarFolgas() {
-    const notification = document.getElementById('notification');
-    if (!turmaSelecionada) { notification.style.display = 'none'; return; }
-    
-    notification.style.display = 'block';
-    const chave = `${anoAtual}-${mesAtual + 1}`;
-    const folgas = (folgasPorTurmaEMes[chave] && folgasPorTurmaEMes[chave][turmaSelecionada]) || [];
-    
-    if (hoje.getMonth() !== mesAtual || hoje.getFullYear() !== anoAtual) {
-        notification.className = 'notification trabalho';
-        notification.innerHTML = `Exibindo agenda de ${mesAtual + 1}/${anoAtual}`;
-        return;
-    }
-
-    const ehFolga = folgas.includes(hoje.getDate());
-    notification.className = ehFolga ? 'notification folga' : 'notification trabalho';
-    notification.innerHTML = ehFolga ? `<strong>Hoje é folga!</strong>` : `<strong>Hoje é dia de trabalho.</strong>`;
-}
-
 function saveData() {
     localStorage.setItem('folgaTurmaData', JSON.stringify({ turma: turmaSelecionada, darkMode: darkMode }));
 }
 
 function loadSavedData() {
-    const data = JSON.parse(localStorage.getItem('folgaTurmaData'));
-    if (data) {
-        turmaSelecionada = data.turma;
-        darkMode = data.darkMode;
+    const savedData = localStorage.getItem('folgaTurmaData');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        turmaSelecionada = data.turma || '';
+        darkMode = data.darkMode || false;
         if (darkMode) document.body.classList.add('dark-mode');
-        document.getElementById('turma').value = turmaSelecionada || '';
+        document.getElementById('turma').value = turmaSelecionada;
+        document.getElementById('themeToggle').textContent = darkMode ? '☀️' : '🌙';
     }
 }
 
-window.onload = verificarFolgas;
+window.onload = function() {
+    verificarFolgas();
+};
