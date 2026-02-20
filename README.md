@@ -1,6 +1,6 @@
 # 🗓️ Consulta de Escalas e Folgas
 
-Uma aplicação web desenvolvida para otimizar e facilitar o acompanhamento da jornada de trabalho e dias de descanso dos colaboradores da Meli. 
+Um site desenvolvido para otimizar e facilitar o acompanhamento da jornada de trabalho e dias de folgas dos colaboradores da Meli. 
 
 O objetivo principal deste projeto é oferecer uma ferramenta rápida, intuitiva e acessível, permitindo que a equipe consulte sua rotina de turnos de forma autônoma e sem complicações.
 
@@ -12,11 +12,11 @@ O objetivo principal deste projeto é oferecer uma ferramenta rápida, intuitiva
 
 ## 🚀 Como Acessar e Usar
 
-A aplicação está em produção e pronta para uso. 
+A aplicação está pronta para uso. 
 
 1. Acesse o ambiente online: **https://folgasturma.vercel.app**
 2. Na tela principal, localize a opção de seleção e escolha a sua **turma de escala**.
-3. O sistema exibirá automaticamente a sua escala programada.
+3. O sistema exibirá automaticamente a sua escala de folgas programada.
 
 ## 🛠️ Tecnologias e Infraestrutura
 
@@ -25,7 +25,7 @@ A aplicação está em produção e pronta para uso.
 
 ## 🤝 Feedbacks e Melhorias
 
-Este projeto foi construído com o intuito de somar e facilitar o dia a dia da operação. Sugestões de melhorias e feedbacks são sempre bem-vindos! Sinta-se à vontade para abrir uma *Issue* neste repositório caso tenha alguma ideia ou encontre algum problema.
+Este projeto foi construído com o intuito de somar e facilitar o dia a dia da operação. Sugestões de melhorias e feedbacks são sempre bem-vindos! Sinta-se à vontade para dar qualquer sugestão neste repositório caso tenha alguma ideia ou encontre algum problema.
 
 ---
 *Desenvolvido para apoiar a nossa equipe.*
