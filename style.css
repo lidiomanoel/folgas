@@ -48,6 +48,7 @@ body.dark-mode .month-selector button:hover {
 }
 
 body.dark-mode footer {
+    background-color: #1a1a1a;
     border-color: #444;
     color: #aaa;
 }
@@ -209,7 +210,11 @@ h2 {
     cursor: not-allowed;
 }
 footer {
-    margin-top: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
     padding: 15px 0;
     text-align: center;
     font-size: 12px;
@@ -217,7 +222,8 @@ footer {
     border-top: 1px solid #eee;
     font-family: 'Quicksand', Arial, sans-serif;
     font-weight: 500;
-    transition: border-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    z-index: 1000;
 }
 
 /* Melhorias específicas para celulares */
