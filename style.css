@@ -7,7 +7,7 @@ body {
     padding-bottom: 70px;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -231,7 +231,7 @@ footer {
 /* Melhorias específicas para celulares */
 @media (max-width: 600px) {
     body {
-        padding: 10px;
+        padding: 10px 10px 70px 10px;
     }
     .calendar td {
         height: 50px;
