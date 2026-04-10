@@ -1,60 +1,76 @@
-# 💻 Documentação Técnica - Site de Consulta de Escalas
+# 💻 Documentação Técnica - Site Consulta de Escalas
 
-Este documento é destinado a desenvolvedores que farão manutenção, atualizações ou melhorias no projeto. O site é uma aplicação Single Page Application (SPA) construída com HTML, CSS e JavaScript puros (Vanilla JS), sem uso de frameworks complexos, visando alta performance e facilidade de manutenção.
+Este documento fornece uma visão detalhada da arquitetura, lógica de negócios e estrutura de código da aplicação "Consulta de Escalas e Folgas". O projeto foi construído utilizando **HTML5, CSS3 e Vanilla JavaScript (ES6+)**, sem dependências de frameworks front-end, garantindo leveza e carregamento rápido.
 
-## 📂 Estrutura de Arquivos
+## 🏗️ Arquitetura e Integrações
 
-* `index.html`: Estrutura principal da página, formulários de seleção e a tabela do calendário.
-* `style.css`: Toda a estilização da página, incluindo variáveis CSS (Custom Properties) para o controle do Tema Claro/Escuro e design responsivo.
-* `script.js`: Lógica de negócio, manipulação do DOM, controle de LocalStorage e a base de dados de folgas.
+* **Hospedagem e CI/CD:** O deploy é realizado via **Vercel**.
+* **Analytics:** A aplicação conta com duas ferramentas de monitoramento embutidas no `index.html`:
+    * **Google Analytics (gtag.js):** Configurado com o ID `G-Q6ZHX2W8X1`.
+    * **Vercel Web Insights:** Script carregado no final do body (`/_vercel/insights/script.js`).
+* **Tipografia:** Utiliza a fonte **Quicksand** (pesos 300 a 700) via Google Fonts.
 
-## 🔄 Como atualizar a base de dados de Folgas (Anualmente/Mensalmente)
+---
 
-O coração da aplicação é a constante `folgasPorTurmaEMes` localizada no início do arquivo `script.js`. Ela funciona como a "banco de dados" estático do site.
+## 🧠 Lógica de Negócios e Estado (`script.js`)
 
-Para adicionar novos meses ou anos, você deve seguir estritamente o formato abaixo:
+O arquivo `script.js` concentra toda a inteligência da aplicação. A aplicação funciona com base em um "estado" global simples composto por quatro variáveis:
+* `mesAtual` (0-11)
+* `anoAtual` (YYYY)
+* `turmaSelecionada` (String: 'A', 'B', 'C', 'D' ou vazia)
+* `darkMode` (Boolean)
 
+### 1. Base de Dados Estática (`folgasPorTurmaEMes`)
+Os dados de folga estão *hardcoded* em um objeto literal. A estrutura de chave segue obrigatoriamente o padrão `YYYY-M` (ex: `2025-6` para Junho de 2025). Os meses não possuem zero à esquerda.
+* **Manutenção:** Ao final de 2026, será necessário expandir este objeto para incluir os arrays de folgas de 2027.
+
+### 2. Travas de Navegação (Boundary Checks)
+A aplicação possui limites rígidos de navegação definidos no evento `DOMContentLoaded`.
+Atualmente, os limites são **Junho de 2025 (`mesAtual = 5`)** até **Dezembro de 2026 (`mesAtual = 11`)**.
 \`\`\`javascript
-const folgasPorTurmaEMes = {
-    // Formato da chave: 'YYYY-M' (Ano - Mês atual, sem zero à esquerda)
-    // O Mês vai de 1 (Janeiro) a 12 (Dezembro).
-    '2027-1': { 
-        'A': [1, 5, 9, ...], // Array com os dias de folga da Turma A
-        'B': [2, 6, 10, ...], // Array com os dias de folga da Turma B
-        'C': [3, 7, 11, ...], // Array com os dias de folga da Turma C
-        'D': [4, 8, 12, ...]  // Array com os dias de folga da Turma D
-    },
-    // ...
-};
-\`\`\`
-
-**Atenção aos limites de data:**
-No `script.js`, dentro do evento `DOMContentLoaded`, existem travas de segurança para impedir que o usuário navegue para meses vazios. Se você adicionar dados para 2027, precisará atualizar a validação de limite:
-
-\`\`\`javascript
-// Exemplo: Atualizar se adicionar dados de 2027
+// Se o sistema carregar antes de Junho de 2025, força a exibição para Jun/2025
 if (anoAtual < 2025 || (anoAtual === 2025 && mesAtual < 5)) {
-    // ... limite inferior
-} else if (anoAtual > 2027) { // <-- Atualizar o ano máximo aqui
+    mesAtual = 5; 
+    anoAtual = 2025;
+} 
+// Se passar de 2026, trava em Dezembro de 2026
+else if (anoAtual > 2026) {
     mesAtual = 11;
-    anoAtual = 2027; // <-- Atualizar o ano máximo aqui
+    anoAtual = 2026;
 }
 \`\`\`
-*(Nota: O mesmo deve ser feito na função `updateNavigationButtons()` e nos listeners de `prevMonth` e `nextMonth`).*
+* **Atenção em Atualizações Futuras:** Ao adicionar dados de 2027, as travas acima e as validações dentro dos event listeners dos botões `#prevMonth` e `#nextMonth` **devem** ser atualizadas obrigatoriamente, caso contrário o usuário não conseguirá avançar de mês.
 
-## 🧠 Lógica Principal (`script.js`)
+### 3. Função: `verificarFolgas()`
+Esta função gerencia o banner de notificação. A lógica opera da seguinte forma:
+1.  **Validação de Turma:** Se nenhuma turma estiver selecionada, o banner é ocultado.
+2.  **Verificação de Escopo:** Compara o mês/ano que o usuário está visualizando na tela com o mês/ano real (`new Date()`). Se o usuário navegou para um mês diferente do atual, um aviso é exibido informando que ele está "Fora do período exibido".
+3.  **Cálculo da Próxima Folga:** Se hoje for dia de trabalho, a função utiliza `.filter()` para pegar todos os dias do array da turma no mês atual que sejam *maiores* que `diaAtual`, aplica um `.sort()` e retorna a posição `[0]`, prevendo quando será o próximo dia de descanso.
 
-A aplicação roda baseada em manipulação de estado local e reconstrução da tabela HTML.
+### 4. Função: `renderCalendar()`
+Responsável pela montagem dinâmica do calendário em formato de tabela (`<tbody>`).
+* Calcula o `firstDay` do mês usando `new Date(ano, mes, 1).getDay()`.
+* Calcula o total de dias no mês usando o "truque" do dia zero do mês seguinte: `new Date(ano, mes + 1, 0).getDate()`.
+* Itera criando linhas (`<tr>`) e células (`<td>`). Compara cada `date` gerado com a chave `YYYY-M` correspondente na base de dados para injetar as classes `.work-day` ou `.off-day`.
 
-* **`verificarFolgas()`**: Identifica o dia atual, compara com a base de dados e exibe o banner de notificação. Também calcula o próximo dia de folga fazendo um `.filter()` nos dias maiores que hoje.
-* **`renderCalendar()`**: Destrói e recria o `<tbody>` do calendário toda vez que o mês ou a turma mudam. Ele calcula o primeiro dia do mês e a quantidade de dias, preenchendo as células `<td>` e injetando as classes CSS correspondentes (`.off-day` ou `.work-day`).
-* **`saveData()` e `loadSavedData()`**: A preferência de Turma e o Tema (Claro/Escuro) são salvos no cache do navegador (`localStorage` na chave `folgaTurmaData`) para que o usuário não precise selecionar a turma novamente ao recarregar a página.
+### 5. Persistência de Dados (`localStorage`)
+Para melhorar a experiência do usuário, as preferências não são perdidas no refresh.
+* **Chave Utilizada:** `folgaTurmaData`.
+* **Dados Armazenados:** Um objeto JSON stringificado contendo `{ turma, darkMode }`.
+* A função `loadSavedData()` é chamada logo no carregamento inicial para resgatar essas variáveis e aplicar o tema/turma.
+
+---
 
 ## 🎨 Estilização e Temas (`style.css`)
 
-O projeto utiliza a estratégia de **Variáveis CSS** no `:root` para gerenciar as cores.
+O CSS foi estruturado utilizando a abordagem de **CSS Custom Properties (Variáveis)** no escopo `:root`, o que torna a manutenção de cores e a troca de temas centralizadas em um só lugar.
 
-* Para alterar a paleta do **Tema Claro**, edite as variáveis dentro do bloco `:root { ... }`.
-* O **Tema Escuro** é ativado adicionando a classe `.dark-mode` na tag `<body>`. As cores correspondentes devem ser alteradas no bloco `body.dark-mode { ... }`.
+### Gestão do Dark Mode
+A alternância de temas não requer sobrescrita manual de dezenas de classes. Basta o JS adicionar a classe `.dark-mode` na tag `<body>`.
+No CSS, há um bloco específico `body.dark-mode { ... }` que redefine o valor das variáveis declaradas no `:root`. 
+* **Exemplo:** A cor da célula de trabalho (`--work-bg`) passa de `#fff5f5` (Claro) para `rgba(229, 62, 62, 0.15)` (Escuro) dinamicamente.
 
-O layout utiliza `flexbox` para alinhamento e é adaptado para dispositivos móveis via `@media queries` (breakpoints principais em `600px` e `400px`), ajustando tamanhos de fonte e margens para caber na tela do celular sem quebrar a tabela.
+### Responsividade (Media Queries)
+O layout é mobile-first em sua essência, mas ajusta proporções finas com os seguintes breakpoints:
+* **`@media (max-width: 600px)`:** Reduz espaçamentos (`padding`), diminui o tamanho das fontes (ex: a fonte das células do calendário passa para `9px` com paddings ajustados para caber em telas menores), e reorganiza o espaçamento das bordas da tabela.
+* **`@media (max-width: 400px)`:** Muda o comportamento do seletor de mês (`.month-selector`), transformando o `flex-direction` em `column` para evitar quebra horizontal dos botões em telas muito estreitas.
