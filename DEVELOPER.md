@@ -14,15 +14,23 @@ Este documento fornece uma visão detalhada da arquitetura, lógica de negócios
 
 ## 🧠 Lógica de Negócios e Estado (`script.js`)
 
-O arquivo `script.js` concentra toda a inteligência da aplicação. A aplicação funciona com base em um "estado" global simples composto por quatro variáveis:
+O arquivo `script.js` concentra toda a inteligência da aplicação. A aplicação funciona com base em um "estado" global simples composto por cinco variáveis:
 * `mesAtual` (0-11)
 * `anoAtual` (YYYY)
 * `turmaSelecionada` (String: 'A', 'B', 'C', 'D' ou vazia)
+* `setorSelecionado` (String: 'Inbound', 'Outbound' ou vazia)
 * `darkMode` (Boolean)
 
 ### 1. Base de Dados Estática (`folgasPorTurmaEMes`)
 Os dados de folga estão *hardcoded* em um objeto literal. A estrutura de chave segue obrigatoriamente o padrão `YYYY-M` (ex: `2025-6` para Junho de 2025). Os meses não possuem zero à esquerda.
 * **Manutenção:** Ao final de 2026, será necessário expandir este objeto para incluir os arrays de folgas de 2027.
+
+### 1.1 Nova Escala 5x2 por Setor (`folgasNovaEscala` e `DATA_CORTE`)
+A partir de **28/09/2026** (`DATA_CORTE`) a escala é 5x2 e separada por setor **Inbound** e **Outbound**.
+* **Estrutura:** `folgasNovaEscala[setor][YYYY-M][turma]`, com a mesma chave de mês da base antiga. Em `2026-9` constam apenas os dias a partir do dia 28.
+* **Regra de corte:** dias anteriores a `DATA_CORTE` usam `folgasPorTurmaEMes` (sem setor); dias a partir dela usam `folgasNovaEscala`. Em setembro/2026 os dois conjuntos convivem no mesmo mês. Por isso as entradas antigas de 2026-10 a 2026-12 foram removidas.
+* **`statusDia(ano, mes, dia)`:** centraliza a decisão e retorna `'folga'`, `'trabalho'` ou `null` (sem turma, ou dia na nova escala sem setor escolhido). É usada por `renderCalendar()` e `verificarFolgas()`.
+* **Seletor de setor:** botões `#setorToggle` no `index.html`, estado em `setorSelecionado`. Sem setor escolhido, os dias da nova escala ficam sem cor, com um aviso (`#setorHint`) e um banner pedindo a seleção.
 
 ### 2. Travas de Navegação (Boundary Checks)
 A aplicação possui limites rígidos de navegação definidos no evento `DOMContentLoaded`.
@@ -45,7 +53,7 @@ else if (anoAtual > 2026) {
 Esta função gerencia o banner de notificação. A lógica opera da seguinte forma:
 1.  **Validação de Turma:** Se nenhuma turma estiver selecionada, o banner é ocultado.
 2.  **Verificação de Escopo:** Compara o mês/ano que o usuário está visualizando na tela com o mês/ano real (`new Date()`). Se o usuário navegou para um mês diferente do atual, um aviso é exibido informando que ele está "Fora do período exibido".
-3.  **Cálculo da Próxima Folga:** Se hoje for dia de trabalho, a função utiliza `.filter()` para pegar todos os dias do array da turma no mês atual que sejam *maiores* que `diaAtual`, aplica um `.sort()` e retorna a posição `[0]`, prevendo quando será o próximo dia de descanso.
+3.  **Cálculo da Próxima Folga:** Se hoje for dia de trabalho, a função percorre os dias restantes do mês com `statusDia()` e para no primeiro `'folga'`. Se encontrar um dia que exige setor não escolhido, orienta o usuário a selecionar Inbound/Outbound.
 
 ### 4. Função: `renderCalendar()`
 Responsável pela montagem dinâmica do calendário em formato de tabela (`<tbody>`).
@@ -56,7 +64,7 @@ Responsável pela montagem dinâmica do calendário em formato de tabela (`<tbod
 ### 5. Persistência de Dados (`localStorage`)
 Para melhorar a experiência do usuário, as preferências não são perdidas no refresh.
 * **Chave Utilizada:** `folgaTurmaData`.
-* **Dados Armazenados:** Um objeto JSON stringificado contendo `{ turma, darkMode }`.
+* **Dados Armazenados:** Um objeto JSON stringificado contendo `{ turma, setor, darkMode }`.
 * A função `loadSavedData()` é chamada logo no carregamento inicial para resgatar essas variáveis e aplicar o tema/turma.
 
 ---
