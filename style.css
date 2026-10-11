@@ -116,6 +116,45 @@ h2 {
     box-shadow: 0 0 0 3px var(--today-bg);
 }
 
+.setor-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.setor-toggle button {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: 'Quicksand', Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.setor-toggle button:hover {
+    background-color: var(--btn-hover);
+}
+
+.setor-toggle button.active {
+    background-color: var(--today-bg);
+    border-color: var(--today-border);
+    color: var(--today-border);
+}
+
+.setor-hint {
+    display: none;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--today-border);
+}
+
 .month-selector {
     display: flex;
     justify-content: space-between;
@@ -195,6 +234,12 @@ h2 {
     background-color: var(--work-bg);
     color: var(--work-color);
     border-color: var(--work-border);
+}
+
+.notification.aviso {
+    background-color: var(--today-bg);
+    color: var(--today-border);
+    border-color: var(--today-border);
 }
 
 .legend {
