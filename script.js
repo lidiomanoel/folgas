@@ -16,16 +16,34 @@ const folgasPorTurmaEMes = {
     '2026-6': { 'A': [4, 5, 12, 13, 20, 21, 25, 29], 'B': [6, 7, 11, 15, 22, 23, 30], 'C': [1, 8, 9, 16, 17, 24, 28], 'D': [2, 3, 10, 14, 18, 19, 26, 27] },
     '2026-7': { 'A': [6, 7, 14, 15, 22, 26, 30, 31], 'B': [1, 8, 12, 16, 17, 24, 25], 'C': [2, 3, 10, 11, 18, 19, 27], 'D': [4, 5, 9, 13, 20, 21, 28, 29] },
     '2026-8': { 'A': [7, 8, 15, 16, 20, 24, 31], 'B': [1, 2, 9, 10, 17, 18, 25, 26], 'C': [3, 4, 11, 12, 19, 23, 27, 28], 'D': [5, 6, 13, 14, 21, 22, 29, 30] },
-    '2026-9': { 'A': [1, 8, 9, 16, 20, 24, 25], 'B': [2, 3, 10, 11, 18, 19, 26, 27], 'C': [4, 5, 12, 13, 21, 28, 29], 'D': [6, 7, 14, 15, 22, 23, 30] },
-    '2026-10': { 'A': [2, 3, 10, 11, 19, 26, 27], 'B': [4, 5, 12, 13, 20, 21, 28, 29], 'C': [6, 7, 14, 18, 22, 23, 30, 31], 'D': [1, 8, 9, 16, 17, 24, 25] },
-    '2026-11': { 'A': [3, 4, 11, 15, 19, 20, 27, 28], 'B': [5, 6, 13, 14, 21, 22, 29, 30], 'C': [7, 8, 12, 16, 23, 24], 'D': [1, 2, 9, 10, 17, 18, 25, 26] },
-    '2026-12': { 'A': [5, 6, 10, 14, 21, 22, 29, 30], 'B': [7, 8, 15, 16, 23, 27, 31], 'C': [1, 2, 9, 13, 17, 18, 25, 26], 'D': [3, 4, 11, 12, 19, 20, 24, 28] }
+    // Em setembro/2026 só valem os dias anteriores a DATA_CORTE (28/09); depois vale a escala nova.
+    '2026-9': { 'A': [1, 8, 9, 16, 20, 24, 25], 'B': [2, 3, 10, 11, 18, 19, 26, 27], 'C': [4, 5, 12, 13, 21, 28, 29], 'D': [6, 7, 14, 15, 22, 23, 30] }
 };
+
+// Nova escala 5x2 (a partir de 28/09/2026), separada por setor. Mesma chave 'YYYY-M'.
+const folgasNovaEscala = {
+    'Inbound': {
+        '2026-9': { 'A': [29, 30], 'B': [28], 'C': [], 'D': [] },
+        '2026-10': { 'A': [5, 11, 17, 18, 22, 23, 27, 28], 'B': [4, 10, 11, 15, 16, 20, 21, 26], 'C': [3, 4, 8, 9, 13, 14, 19, 25, 31], 'D': [1, 2, 6, 7, 12, 18, 24, 25, 29, 30] },
+        '2026-11': { 'A': [2, 8, 14, 15, 19, 20, 24, 25, 30], 'B': [1, 7, 8, 12, 13, 17, 18, 23, 29], 'C': [1, 5, 6, 10, 11, 16, 22, 28, 29], 'D': [3, 4, 9, 15, 21, 22, 26, 27] },
+        '2026-12': { 'A': [6, 12, 13, 17, 18, 22, 23, 28], 'B': [5, 6, 10, 11, 15, 16, 21, 27], 'C': [3, 4, 8, 9, 14, 20, 26, 27, 31], 'D': [1, 2, 7, 13, 19, 20, 24, 25, 29, 30] }
+    },
+    'Outbound': {
+        '2026-9': { 'A': [28], 'B': [], 'C': [29, 30], 'D': [] },
+        '2026-10': { 'A': [4, 9, 10, 15, 16, 20, 21, 26], 'B': [1, 2, 6, 7, 12, 18, 23, 24, 29, 30], 'C': [5, 11, 16, 17, 22, 23, 27, 28], 'D': [2, 3, 8, 9, 13, 14, 19, 25, 30, 31] },
+        '2026-11': { 'A': [1, 6, 7, 12, 13, 17, 18, 23, 29], 'B': [3, 4, 9, 15, 20, 21, 26, 27], 'C': [2, 8, 13, 14, 19, 20, 24, 25, 30], 'D': [5, 6, 10, 11, 16, 22, 27, 28] },
+        '2026-12': { 'A': [4, 5, 10, 11, 15, 16, 21, 27], 'B': [1, 2, 7, 13, 18, 19, 24, 25, 29, 30], 'C': [6, 11, 12, 17, 18, 22, 23, 28], 'D': [3, 4, 8, 9, 14, 20, 25, 26, 31] }
+    }
+};
+
+// A partir desta data (28/09/2026) a escala depende do setor (Inbound/Outbound).
+const DATA_CORTE = new Date(2026, 8, 28);
 
 const hoje = new Date();
 let mesAtual = hoje.getMonth(); 
 let anoAtual = hoje.getFullYear();
 let turmaSelecionada = '';
+let setorSelecionado = '';
 let darkMode = false;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -50,6 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCalendar();
     });
     
+    document.querySelectorAll('#setorToggle button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            setorSelecionado = this.dataset.setor;
+            saveData();
+            updateSetorButtons();
+            verificarFolgas();
+            renderCalendar();
+        });
+    });
+
     document.getElementById('prevMonth').addEventListener('click', function() {
         if (mesAtual === 5 && anoAtual === 2025) return;
         if (mesAtual === 0) { mesAtual = 11; anoAtual--; } else { mesAtual--; }
@@ -86,7 +114,31 @@ function updateMonthYearDisplay() {
     document.getElementById('monthYear').textContent = `${meses[mesAtual]} ${anoAtual}`;
 }
 
-// RESTAURAÇÃO DA SUA FUNÇÃO ORIGINAL DE VERIFICAÇÃO
+function updateSetorButtons() {
+    document.querySelectorAll('#setorToggle button').forEach(function(btn) {
+        const ativo = btn.dataset.setor === setorSelecionado;
+        btn.classList.toggle('active', ativo);
+        btn.setAttribute('aria-pressed', ativo);
+    });
+}
+
+// Retorna 'folga', 'trabalho' ou null quando não dá para saber
+// (sem turma, ou dia na nova escala sem setor escolhido).
+function statusDia(ano, mes, dia) {
+    if (!turmaSelecionada) return null;
+    const chave = `${ano}-${mes + 1}`;
+    let folgas;
+    if (new Date(ano, mes, dia) >= DATA_CORTE) {
+        if (!setorSelecionado) return null;
+        const mesNovo = folgasNovaEscala[setorSelecionado][chave] || {};
+        folgas = mesNovo[turmaSelecionada] || [];
+    } else {
+        const mesAntigo = folgasPorTurmaEMes[chave] || {};
+        folgas = mesAntigo[turmaSelecionada] || [];
+    }
+    return folgas.includes(dia) ? 'folga' : 'trabalho';
+}
+
 function verificarFolgas() {
     if (!turmaSelecionada) {
         document.getElementById('notification').style.display = 'none';
@@ -108,15 +160,18 @@ function verificarFolgas() {
         return;
     }
     
-    const chaveMes = `${anoAtual}-${mesAtual + 1}`;
-    const folgasDoMes = folgasPorTurmaEMes[chaveMes] || {};
-    const folgas = folgasDoMes[turmaSelecionada] || [];
-    const ehFolga = folgas.includes(diaAtual);
-    
     const notification = document.getElementById('notification');
     notification.style.display = 'block';
-    
-    if (ehFolga) {
+
+    const status = statusDia(anoAtual, mesAtual, diaAtual);
+    if (status === null) {
+        notification.className = 'notification aviso';
+        notification.innerHTML = '<strong>Selecione Inbound ou Outbound</strong><br>' +
+            'A escala depende do setor a partir de 28/09/2026.';
+        return;
+    }
+
+    if (status === 'folga') {
         notification.className = 'notification folga';
         notification.innerHTML = `<strong>Hoje (${diaAtual}/${mesAtual + 1}/${anoAtual}) é seu dia de folga!</strong> Aproveite para descansar.`;
     } else {
@@ -124,9 +179,18 @@ function verificarFolgas() {
         notification.innerHTML = `<strong>Hoje (${diaAtual}/${mesAtual + 1}/${anoAtual}) é dia de trabalho.</strong>`;
         
         // Mostra quando será a próxima folga
-        const proximasFolgas = folgas.filter(dia => dia > diaAtual).sort((a, b) => a - b);
-        if (proximasFolgas.length > 0) {
-            notification.innerHTML += `<br>Sua próxima folga será dia ${proximasFolgas[0]}/${mesAtual + 1}/${anoAtual}.`;
+        const diasNoMes = new Date(anoAtual, mesAtual + 1, 0).getDate();
+        let proximaFolga = null;
+        let faltaSetor = false;
+        for (let dia = diaAtual + 1; dia <= diasNoMes; dia++) {
+            const s = statusDia(anoAtual, mesAtual, dia);
+            if (s === null) { faltaSetor = true; break; }
+            if (s === 'folga') { proximaFolga = dia; break; }
+        }
+        if (proximaFolga !== null) {
+            notification.innerHTML += `<br>Sua próxima folga será dia ${proximaFolga}/${mesAtual + 1}/${anoAtual}.`;
+        } else if (faltaSetor) {
+            notification.innerHTML += '<br>Selecione Inbound ou Outbound para ver as folgas a partir de 28/09/2026.';
         } else {
             notification.innerHTML += '<br>Este mês não há mais folgas para sua turma.';
         }
@@ -152,10 +216,9 @@ function renderCalendar() {
                 dayDiv.textContent = date;
                 cell.appendChild(dayDiv);
                 
-                if (turmaSelecionada) {
-                    const chave = `${anoAtual}-${mesAtual + 1}`;
-                    const folgas = (folgasPorTurmaEMes[chave] && folgasPorTurmaEMes[chave][turmaSelecionada]) || [];
-                    const isFolga = folgas.includes(date);
+                const status = statusDia(anoAtual, mesAtual, date);
+                if (status) {
+                    const isFolga = status === 'folga';
                     cell.classList.add(isFolga ? 'off-day' : 'work-day');
                     const span = document.createElement('span');
                     span.textContent = isFolga ? 'Folga' : 'Trabalho';
@@ -172,10 +235,15 @@ function renderCalendar() {
         calendarBody.appendChild(row);
         if (date > daysInMonth) break;
     }
+
+    // Avisa quando o mês exibido tem dias na nova escala e o setor não foi escolhido
+    const ultimoDia = new Date(anoAtual, mesAtual, daysInMonth);
+    const faltaSetor = turmaSelecionada && !setorSelecionado && ultimoDia >= DATA_CORTE;
+    document.getElementById('setorHint').style.display = faltaSetor ? 'block' : 'none';
 }
 
 function saveData() {
-    localStorage.setItem('folgaTurmaData', JSON.stringify({ turma: turmaSelecionada, darkMode: darkMode }));
+    localStorage.setItem('folgaTurmaData', JSON.stringify({ turma: turmaSelecionada, setor: setorSelecionado, darkMode: darkMode }));
 }
 
 function loadSavedData() {
@@ -183,7 +251,9 @@ function loadSavedData() {
     if (savedData) {
         const data = JSON.parse(savedData);
         turmaSelecionada = data.turma || '';
+        setorSelecionado = data.setor || '';
         darkMode = data.darkMode || false;
+        updateSetorButtons();
         if (darkMode) document.body.classList.add('dark-mode');
         document.getElementById('turma').value = turmaSelecionada;
         document.getElementById('themeToggle').textContent = darkMode ? '☀️' : '🌙';

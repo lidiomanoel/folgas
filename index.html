@@ -35,7 +35,12 @@
             <option value="D">Turma D</option>
         </select>
     </div>
-    
+
+    <div class="setor-toggle" id="setorToggle" role="group" aria-label="Setor">
+        <button type="button" data-setor="Inbound" aria-pressed="false">Inbound</button>
+        <button type="button" data-setor="Outbound" aria-pressed="false">Outbound</button>
+    </div>
+
     <div id="notification" class="notification"></div>
     
     <div class="legend">
@@ -55,6 +60,8 @@
         <button id="nextMonth">Próximo Mês &gt;</button>
     </div>
     
+    <div id="setorHint" class="setor-hint">Selecione Inbound ou Outbound para ver as folgas a partir de 28/09/2026.</div>
+
     <table class="calendar" id="calendar">
         <thead>
             <tr>
